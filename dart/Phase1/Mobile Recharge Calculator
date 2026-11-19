@@ -1,0 +1,43 @@
+Write a Dart program using these inputs:
+Input	Value
+Customer	Rahul
+Recharge price	₹299
+Quantity	3
+Cashback	₹50
+
+Calculate the subtotal and final payable amount. Print a receipt and reject zero or negative quantities.
+
+For the valid inputs, your program should calculate a subtotal of ₹897 and final payable amount of ₹847. */
+
+
+
+
+double calculateTotal(double price, int quantity) {
+  return price * quantity;
+}
+
+void main() {
+  final String customerName = "Rahul";
+  final double price = 299;
+  final int quantity = 3;
+
+  if (price < 0 || quantity < 0) {
+    print("Price and Quantity cannot be Negative.");
+    return;
+  }
+  final double subTotal = calculateTotal(price, quantity);
+
+  final double cashBack = 50;
+
+  final double finalAmount = subTotal - cashBack;
+
+  print("Customer: $customerName");
+  print("Recharge price: \₹${price.toStringAsFixed(2)}");
+  print("Quantity: $quantity");
+  print("Subtotal: \₹${subTotal.toStringAsFixed(2)}");
+  print("Cashback: \ ₹${cashBack.toStringAsFixed(2)}");
+
+  print(
+    "Final payable amount              \₹${finalAmount.toStringAsFixed(2)}",
+  );
+}
