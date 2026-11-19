@@ -1,6 +1,6 @@
 Write a Dart program using these inputs:
 Input	Value
-Customer	Rahul
+Customer	Arfat
 Recharge price	₹299
 Quantity	3
 Cashback	₹50
@@ -17,7 +17,7 @@ double calculateTotal(double price, int quantity) {
 }
 
 void main() {
-  final String customerName = "Rahul";
+  final String customerName = "Arfat";
   final double price = 299;
   final int quantity = 3;
 
