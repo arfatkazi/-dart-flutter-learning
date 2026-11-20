@@ -14,7 +14,7 @@ What you will learn
 - Type safety, runtime checks and common errors.
 - When to choose different declarations in real Flutter applications.
 
-I understand what is var , const , final , Object , Object? , dynamic
+I understand what is var ,  Object , Object? , dynamic
 */
 
 
