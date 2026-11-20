@@ -14,7 +14,7 @@ What you will learn
 - Type safety, runtime checks and common errors.
 - When to choose different declarations in real Flutter applications.
 
-
+I understand what is var , const , final , Object , Object? , dynamic
 */
 
 
@@ -142,6 +142,8 @@ void displayValue(Object value) {
 }
 
 /*
+
+
 
 I. Practice exercises
 Exercise 1 — Beginner
