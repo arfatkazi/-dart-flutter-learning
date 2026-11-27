@@ -1,4 +1,3 @@
-
 /*
 
 Phase 6 — Object-Oriented Programming
@@ -512,24 +511,375 @@ Product(name: 'Laptop', price: 55000);
 
 */
 
-
 /*   
-
-Understand encapsulation and information hiding.
-Learn how Dart handles public and private members.
-Understand library-level privacy versus class-level privacy.
-Create getters using get.
-Create validated setters using set.
-Understand read-only and computed properties.
-Choose between setters and business methods.
-Protect mutable collections and class invariants.
-Build an encapsulated banking account model.
+lesson 32 
 
 
-
-
+Understand encapsulation and why it matters.
+Distinguish public and library-private members.
+Create private fields with _.
+Implement getters using get.
+Implement setters using set.
+Validate changes to object state.
+Understand read-only, writable and computed properties.
+Know when to use methods instead of setters.
+Apply encapsulation to real Flutter application models.
 
 
 
+1. What is encapsulation?
+Encapsulation is the practice of designing an object's interface so its internal state and implementation details are controlled rather than freely manipulated by external code.
+
+
+
+
+
+2. What is an invariant?
+An invariant is a rule that should remain true for every valid object state.
+
+For a bank account, examples include:
+- Balance cannot be negative.
+- A deposit must be positive.
+- A withdrawal cannot exceed the balance.
+Encapsulation helps enforce these rules in one place.
+
+
+3. Public and private members
+In Dart, an identifier that begins with _ is private to its library.
+
+
+
+// class User{
+//   final String name; // Public instance field
+//   String _password; //// Library-private instance field
+
+
+//   User({
+//     required this.name,
+//     required this._password,
+//   })
+
+
+
+class Student{ // // [1] CLASS DECLARATION
+// [3] PUBLIC INSTANCE FIELD
+  final String name;
+  final int age;
+  final String subject;
+   // [2] PRIVATE INSTANCE FIELD
+
+  Student({
+    required this.name,
+    required this.age,
+    required this.subject,
+
+
+  });
+
+  void studentInfo(){
+    print('--------------');
+    print('Student Information');
+    print('Name: $name');
+    print('Age: $age');
+    print('Subject: $subject');
+    print('--------------');
+
+
+
+
+  }
+}
+
+
+void main() {
+  final std1 = Student(name: 'Arfat', age: 26, subject: 'English',schoolId: );
+  final std2 = Student(name: 'Devansh', age: 24, subject: 'Hindi', schoolId: 'Dev@123');
+
+
+  std1.studentInfo();
+  std2.studentInfo();
+
+   
+}
+
+
+class Student {
+  // this is the  class
+  //  private field
+  String _name;
+  //  public field
+  final int rollNumber;
+
+  // constructor
+
+  Student(String name, this.rollNumber) : _name = name.trim() {
+
+    // Validation
+    if (_name.isEmpty) {
+      throw ArgumentError("Name cannot be empty");
+    }
+  }
+
+
+
+
+
+
+  // Getter
+  String get name => _name;
+
+  //Setter
+  set name(String newName) {
+    // Local variable
+    final cleanedName = newName.trim();
+
+    // Business Validation
+    if (cleanedName.isEmpty) {
+      throw ArgumentError('Name cannot be empty');
+    }
+
+    // PRIVATE FIELD ASSIGNMENT
+    _name = newName;
+  }
+
+
+
+  // [11] INSTANCE METHOD
+  void displayInfo() {
+    print('Name: $name');
+    print('Roll: $rollNumber');
+  }
+}
+
+void main() {
+  // OBJECT CREATION
+  final student = Student('Arfat', 20);
+
+  // getter access
+
+  print(student._name);
+
+  // setter access
+
+  student.name = 'devansh';
+
+  student.displayInfo();
+}
+
+Important: You call a getter without parentheses.
+ dobule get pricePaise => _pricePaise
+Correct:
+print(product.pricePaise);
+
+
+
+// 7. Understanding setter
+
+
+class Rectangle{
+  final double width;
+  final double height;
+
+  Rectangle(this.width,this.height);
+
+  // getter
+  double get area => width * height;
+
+  //getter
+  double get perimeter => 2 * (width + height); 
+
+
+
+
+}
+
+
+void main(){
+  final rectangle = Rectangle(4, 10);
+
+  print(rectangle.area);
+  print(rectangle.perimeter);
+
+  
+}
+
+
+
+// 8. understanding getter
+ A setter controls how a property is assigned.
+ set properName(type value)
+
+
+ 
+class Product{
+  int _pricePaise;
+
+  Product(this._pricePaise);
+
+ // get setter
+ int get pricePaise => _pricePaise;
+
+ // set setter
+
+ set pricePaise(int newPrice){
+  if(pricePaise < 0){
+    throw ArgumentError("Price cannot be negative");
+  }
+
+  _pricePaise = newPrice;
+ }
+
+}
+
+void main(){
+  final product = Product(15999);
+  product.pricePaise = 45000;
+
+  print(product.pricePaise);
+}
+
+
+// 9. What is a backing field?
+
+// 1.A backing field is a field used internally to store the state exposed through a property.
+int _pricePaise; //Here _pricePaise is the backing field.
+
+
+// This is the public getter.
+int get pricePaise => _pricePaise;
+
+
+// This is the public setter.
+set pricePaise(int value) {
+  _pricePaise = value;
+}
+
+The naming distinction matters:
+- _pricePaise — internal field.
+- pricePaise — public property.
+
+10. Avoid accidental recursion
+This setter is incorrect:
+set pricePaise(int value) {
+  pricePaise = value;
+}
+
+The assignment invokes the same setter again, causing recursion until execution fails.
+
+Correct:
+set pricePaise(int value) {
+  _pricePaise = value;
+}
+
+The backing field avoids calling the setter recursively.
+
+
+class Wallet {
+  int _bankBalance = 0;
+
+  // getter
+  int get bankBalance => _bankBalance;
+
+  void deposit(int amountPaise) {
+    if (amountPaise < 0) {
+      throw ArgumentError("Amount cannot be negative");
+    }
+
+    _bankBalance += amountPaise;
+  }
+}
+
+
+void main(){
+  
+  final  wallet = Wallet();
+
+  wallet.deposit(50000);
+
+  print(wallet.bankBalance);
+
+  // wallet.bankBalance = 60000;
+
+}
+
+
+examples:
+
+class Employee{
+  int _salary;
+
+  Employee(int salary) : _salary = salary{
+    if(salary < 0){
+      throw ArgumentError("Salary cannot be negative");
+    }
+  }
+
+  int get salary => _salary;
+
+  set salary(int newSalary){
+    if(newSalary < 0){
+      throw ArgumentError('Salary cannot be negative');
+    }
+    // _salary += newSalary; 
+    _salary = newSalary;
+  }
+
+  void salaryInfo(){
+    print("Monthly salary: \₹$salary");
+  }
+}
+
+
+void main(){
+  final employee = Employee(15000);
+
+  employee.salary = 70000;
+  employee.salaryInfo();
+
+}
 
 */
+
+class Bank{
+  // show balance
+  // deposit
+  // withdrawal
+
+  int _balance;
+
+  Bank(int balance) : _balance  = balance{
+    if(balance < 0){
+         throw ArgumentError('Balance cannot be Negative.');
+    }
+  }
+
+  int get balance => _balance;
+
+  void updateBalance(int newBalance){
+     if(newBalance < 0){
+        throw ArgumentError('Balance cannot be negative');
+     }
+     _balance = newBalance;
+
+
+    
+  }
+   void displayBalance(){
+    print("Balance Amount: $balance");
+  }
+
+  
+}
+
+
+void main(){
+  final bank  = Bank(50000);
+
+  bank.displayBalance();
+  bank._balance = 70000;
+  bank.displayBalance();
+
+ 
+
+
+}
