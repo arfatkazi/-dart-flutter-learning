@@ -15,6 +15,7 @@ Lesson	Topic
 33	Inheritance, super, overriding and polymorphism
 34	Abstract classes, interfaces and contracts
 35	Mixins, composition and reusable behavior
+
 36	Advanced constructors, object equality and OOP design
 
 
@@ -512,7 +513,29 @@ Product(name: 'Laptop', price: 55000);
 */
 
 /*   
-lesson 32 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+lesson 32  Encapsulation, Private Members, Getters and Setters
 
 
 Understand encapsulation and why it matters.
@@ -838,7 +861,9 @@ void main(){
 
 }
 
-*/
+
+
+
 
 class Bank{
   // show balance
@@ -882,4 +907,311 @@ void main(){
  
 
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Student{
+  String _name;
+  int _marks;
+
+   
+   Student({
+    required String name,
+    required int marks,
+   }) : _name = name.trim(),
+        _marks = marks {
+          if(_name.isEmpty){
+            throw ArgumentError('Name cannot be empty');
+          }
+
+          if(_marks < 0 || _marks > 100){
+            throw RangeError.range(_marks, 0, 100,'marks');
+          }
+        }
+
+
+        // getter
+
+        String get name => _name;
+
+        set name(String value){
+          final cleanedValue = value.trim();
+
+          if(cleanedValue.isEmpty){
+              throw ArgumentError('Name cannot be empty');
+          }
+
+          _name = cleanedValue;
+        }
+
+        //getter 
+        int get marks => _marks;
+
+        set marks(int value){
+          if(value < 0 || value > 100){
+            throw RangeError.range(value, 0, 100,'mark');
+          }
+          _marks = value;
+        }
+
+
+        bool get hasPassed => _marks >= 40;  //hasPassed is a computed getter. It derives its value from _marks every time it is read
+
+
+        void displayReport(){
+          print('--------------------');
+          print("Student: $name");
+          print("Marks: $marks");
+          print("Passed: $hasPassed");
+          print('-------------------');
+          
+        }
+
+}
+
+
+void main(){
+  final student1 = Student(name: 'Arfat', marks: 26);
+  final student2 = Student(name: 'Devansh', marks: 90);
+
+
+  student1.displayReport();
+  student2.displayReport();
+
+}
+
+
+
+Dart library privacy — The detail many beginners miss
+The underscore _ does not provide class-level privacy.
+
+To demonstrate the real behavior, create two Dart files.
+
+encapsulation_lab/
+
+lib/bank_account.dart
+
+bin/main.dart
+
+
+
+Special example — Mutable collection exposure
+Consider:
+class Cart {
+  final List<String> _items = [];
+
+  List<String> get items => _items;
+}
+
+
+Even though _items is private, the getter exposes the same mutable list. Another library can obtain the list and modify it:
+cart.items.add('Unexpected item');
+
+
+A safer approach is:
+class Cart {
+  final List<String> _items = [];
+
+  List<String> get items => List.unmodifiable(_items);
+
+  void addItem(String item) {
+    if (item.trim().isEmpty) {
+      throw ArgumentError('Item cannot be empty');
+    }
+
+    _items.add(item);
+  }
+}
+
+
+Now callers cannot change the internal collection through items.
+
+*/
+
+/* 
+
+Lesson 32: Inheritance, extends, super, Method Overriding and Polymorphism.import
+
+Understand inheritance and is-a relationships.
+Distinguish a superclass from a subclass.
+Use extends correctly.
+Understand inherited fields and methods.
+Initialize a superclass using super.
+Override methods with @override.
+Understand runtime polymorphism and dynamic dispatch.
+Apply method-signature compatibility rules.
+Recognize when inheritance is inappropriate.
+Build an extensible employee payroll system.
+
+
+1. What is inheritance?
+Inheritance lets a class reuse and specialize behavior defined by another class.
+
+Imagine you are building a vehicle-management application.
+
+Different vehicles share common characteristics:
+- A car has a name and can start.
+- A bike has a name and can start.
+- A truck has a name and can start.
+Instead of repeating all the common functionality, you can place it inside a Vehicle class.
+
+Then Car, Bike and Truck can extend it.
+
+
+
+// [1] PARENT CLASS / SUPERCLASS
+
+class Animal{
+   // [2] INSTANCE METHOD
+  void eat(){
+    print('Animal is eating');
+  }
+}
+
+// [3] CHILD CLASS / SUBCLASS
+class Dog extends Animal{
+    // [4] CHILD-SPECIFIC METHOD
+  void bark(){
+    print('Dog is barking');
+  }
+}
+
+
+// [5] PROGRAM ENTRY POINT
+void main(){
+    // [6] OBJECT CREATION
+  final dog = Dog();
+    // [7] INHERITED METHOD CALL
+  dog.eat();
+
+
+  // [8] CHILD METHOD CALL
+  dog.bark();
+
+}
+
+// The Dog class does not define eat().
+
+
+// PARENT CLASS
+
+class Employee {
+  // PUBLIC INSTANCE FIELDS
+
+  final String name;
+  final int employeeId;
+
+  // PARENT CONSTRUCTOR
+
+  Employee(this.name, this.employeeId);
+
+  // PARENT INSTANCE METHOD
+  void displayInfo() {
+    print('Name: $name');
+    print('ID: $employeeId');
+  }
+}
+
+// CHILD CLASS
+
+class Developer extends Employee {
+  // CHILD-SPECIFIC FIELD
+
+  final String programmingLanguage;
+
+  // CHILD CONSTRUCTOR
+
+  Developer(String name, int employeeId, this.programmingLanguage)
+    : super(name, employeeId);
+
+  // Notice:
+  // class Developer extends Employee
+
+  // This means Developer is a subtype of Employee.
+
+  /*
+5. Understanding super
+super lets a subclass access members or constructors from its superclass.
+
+There are two important uses.
+
+Calling a superclass constructor
+Developer(String name, int id) : super(name, id);
+
+
+Calling a superclass method from an override
+@override
+void displayInfo() {
+  super.displayInfo();
+  print('Additional developer information');
+}
+
+The word super does not create a separate parent object. It provides access to the superclass implementation as part of the current object.
+
+ */
+
+  void writeCode() {
+    print("$name is coding in $programmingLanguage.");
+  }
+}
+
+void main() {
+  final developer = Developer('Arfat', 115, 'Python');
+  // print(developer);
+  developer.displayInfo();
+  developer.writeCode();
+}
+
+
+*/
+
+
+
+class Employee{
+  final String name;
+
+  Employee(this.name);
+}
+
+
+class Developer extends Employee{
+  final String language;
+
+  Developer(super.name,this.language);
+
+  // void displayInfo(){
+  //   print('Name: $name');
+  //   print('Language: $language');
+
+  // }
+
+}
+
+
+void main(){
+  final developer = Developer('Arfat', 'Javascript');
+
+  print(developer.name);
+  print(developer.language);
+  // print(developer);
 }
